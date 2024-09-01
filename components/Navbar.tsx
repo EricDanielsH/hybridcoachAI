@@ -15,7 +15,7 @@ export default function Navbar() {
     { name: "Home", href: "/", public: true },
     { name: "About", href: "/#about", public: true },
     { name: "Dashboard", href: "/dashboard", public: false },
-    { name: "New Workout", href: "/newWorkout", public: true },
+    { name: "New Workout", href: "/newWorkout", public: false },
     { name: "Demo", href: "/#demo", public: true },
     { name: "Pricing", href: "/#pricing", public: true },
   ];
@@ -109,13 +109,13 @@ export default function Navbar() {
           )}
           {session && session?.user ? (
             <li
-              className="my-2 md:my-0 hover:text-lime-300 transition duration-300 font-medium"
+              className="my-2 md:my-0 hover:text-lime-300 transition duration-300 font-medium btn btn-error text-lg text-black"
               onClick={() => signOut()}
             >
               <a>Logout</a>
             </li>
           ) : (
-            <li className="my-2 md:my-0 hover:text-lime-300 transition duration-300 font-medium">
+            <li className="my-2 md:my-0 hover:text-lime-300 transition duration-300 font-medium" onClick={toggleMenu}>
               <LogInButton />
             </li>
           )}
