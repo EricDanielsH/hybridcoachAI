@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { NextResponse } from "next/server";
 import Credentials from "next-auth/providers/credentials";
 import { connectMongoDB } from "@/lib/mongodb";
 
@@ -17,24 +18,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         try {
           await connectMongoDB();
-          const res = await fetch(`${process.env.PUBLIC_URL}/api/findUserByEmail`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
+          const res = await fetch(
+            `${process.env.PUBLIC_URL}/api/auth/findUserByEmail`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: credentials.email,
+              }),
             },
-            body: JSON.stringify({
-              email: credentials.email,
-            }),
-          });
+          );
 
-          if (res.status !== 200) {
-            throw new Error(`Failed to fetch user: ${res.statusText}`);
+          if (!res.ok) {
+            return null;
           }
 
           const { user } = await res.json();
 
           if (!user) {
-            throw new Error("No user found with this email");
+            return null;
           }
 
           console.log("User found auth:", user);

@@ -47,6 +47,15 @@ export default function SignInEmail() {
         body: JSON.stringify({ name, email, password }),
       });
 
+      if (!res.ok) {
+        const errorData = await res.text(); // Retrieve the full response body as text
+        console.error("Error Response Body:", errorData);
+        setError("An error occurred while creating the account.");
+        return;
+      }
+
+      console.log("Response:", res);
+
       const data = await res.json();
       if (data.status !== 200) {
         setError(data.message);
@@ -158,7 +167,9 @@ export default function SignInEmail() {
         </button>
       </form>
 
-      <Link href="/login" className="text-white underline mb-4">Have an account? Log In</Link>
+      <Link href="/login" className="text-white underline mb-4">
+        Have an account? Log In
+      </Link>
     </div>
   );
 }

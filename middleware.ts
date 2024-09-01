@@ -1,10 +1,7 @@
-import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import {auth} from "@/auth"
+import { auth } from "@/auth";
 
-
-// TODO: REMOVE DASHBOARD ROUTE FROM PUBLIC ROUTES
-const publicRoutes = ["/", "/dashboard", "/login", "/register", "/newWorkout"];
+const publicRoutes = ["/", "/login", "/register"];
 const authRoutes = ["/login", "/register"];
 const apiAuthPrefix = "/api/auth";
 
@@ -14,22 +11,22 @@ export default auth((req) => {
 
   console.log({ isLoggedIn, path: nextUrl.pathname });
 
-  // Permitir todas las rutas de API de autenticación
+  // Allow all authentication-related API routes
   if (nextUrl.pathname.startsWith(apiAuthPrefix)) {
     return NextResponse.next();
   }
 
-  // Permitir acceso a rutas públicas sin importar el estado de autenticación
+  // Allow access to public routes regardless of authentication state
   if (publicRoutes.includes(nextUrl.pathname)) {
     return NextResponse.next();
   }
 
-  // Redirigir a /dashboard si el usuario está logueado y trata de acceder a rutas de autenticación
+  // Redirect to /dashboard if the user is logged in and trying to access authentication routes
   if (isLoggedIn && authRoutes.includes(nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/dashboard", nextUrl));
   }
 
-  // Redirigir a /login si el usuario no está logueado y trata de acceder a una ruta protegida
+  // Redirect to /login if the user is not logged in and tries to access a protected route
   if (
     !isLoggedIn &&
     !authRoutes.includes(nextUrl.pathname) &&

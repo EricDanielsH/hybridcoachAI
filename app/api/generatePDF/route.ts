@@ -1,88 +1,111 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
 import { connectMongoDB } from "@/lib/mongodb";
-import Workout from "@/lib/models";
-//import OpenAI,{ Configuration, OpenAIApi } from "openai";
-import { PDFDocument, rgb } from "pdf-lib";
+import Workout from "@/lib/models/workout";
+import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
+import { NextResponse } from "next/server";
+import MarkdownIt from "markdown-it";
+import puppeteer, { PDFOptions } from "puppeteer";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export async function POST(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+    return NextResponse.json({ message: "Invalid request" }, { status: 400 });
   }
 
   try {
-    const { name, strengthSessions, runningSessions, otherSpecifications } =
-      req.body;
+    // Convert the ReadableStream to JSON
+    const buffers: Buffer[] = [];
+    for await (const chunk of req.body) {
+      buffers.push(chunk);
+    }
+    const body = JSON.parse(Buffer.concat(buffers).toString());
 
-    const prompt = `Create a workout plan with the following specifications:
-Workout Name: ${name}
-Number of strength sessions: ${strengthSessions}
-Number of running sessions: ${runningSessions}
-Other specifications: ${otherSpecifications}`;
+    const {
+      workoutName,
+      strengthSessions,
+      runningSessions,
+      otherSpecifications,
+      text,
+    } = body;
+
+    if (!workoutName || !strengthSessions || !runningSessions || !text) {
+      return NextResponse.json({ message: "Missing fields" }, { status: 400 });
+    }
+
+    // Markdown conversion to plain text (or HTML if you prefer)
+    const md = new MarkdownIt();
+    const parsedText = md.render(text); // Convert markdown to HTML
 
     // First, create a new object in DB with the prompt information
     await connectMongoDB();
 
-    const newWorkout = await Workout.new({
-      name,
+    const prompt = `Create a workout plan with the following specifications:
+      Workout Name: ${workoutName}
+      Number of strength sessions: ${strengthSessions}
+      Number of running sessions: ${runningSessions}
+      Other specifications: ${otherSpecifications}`;
+
+    // Creating a new workout object in DB
+    const newWorkout = await Workout.create({
+      workoutName,
       strengthSessions,
       runningSessions,
       otherSpecifications,
-      answer: prompt,
+      message: prompt,
+      answer: `\n\n${text}`,
     });
 
     console.log("Create new workout successfully:", newWorkout);
 
-    const assistant = await openai.beta.assistants.create({
-      name: "HybridCoach AI",
-      instructions:
-        "You are a professional workout coach specializing in hybrid training. Your approach combines strength training, cardiovascular exercises, and flexibility workouts to provide a balanced fitness plan. You are creating tailored workout plans for clients to help them achieve their specific fitness goals. Your response should be informative and within the context of a workout plan and the realm of fitness and well-being",
-      model: "gpt-4o-mini",
-    });
+    const workoutPlan = `
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          h1 { color: #333; }
+          h2 { color: #444; margin-top: 20px; }
+          h3 { color: #555; margin-top: 15px; }
+          p { line-height: 1.6; }
+          ul { margin: 10px 0; }
+          li { margin: 5px 0; }
+          .section { margin-bottom: 20px; }
+          .note { font-style: italic; color: #666; }
+        </style>
+      </head>
+      <body>
+        <h1>${workoutName}</h1>
+        <p><strong>Number of strength sessions:</strong> ${strengthSessions}</p>
+        <p><strong>Number of running sessions:</strong> ${runningSessions}</p>
+        <p><strong>Other specifications:</strong> ${otherSpecifications}</p>
+        <hr>
+        <div>${parsedText}</div>
+      </body>
+      </html>
+    `;
 
-    // Create a new thread and save it to db
-    const thread = await openai.beta.threads.create();
-    newWorkout.threadId = thread.id;
+    // Generate PDF with puppeteer
+    console.log("Generating PDF...");
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(workoutPlan, { waitUntil: "networkidle0" });
 
-    const message = await openai.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: prompt,
-    });
+    // Define PDF options with proper type
+    const pdfOptions: PDFOptions = {
+      format: "A4", // or use { width: '210mm', height: '297mm' } for custom dimensions
+      printBackground: true,
+    };
 
-    const text = completion.data.choices[0].message.content;
+    const pdfBuffer = await page.pdf(pdfOptions);
+    await browser.close();
 
-    // Add the response from OpenAI to the workout object
-    newWorkout.content += `\n\n${text}`;
+    // Convert PDF bytes to base64 string
+    const pdfBase64 = Buffer.from(pdfBuffer).toString("base64");
 
-    // Create a PDF document
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([600, 400]);
-    const { width, height } = page.getSize();
-    const fontSize = 12;
-    const textWidth = width - 100;
-
-    page.drawText(text, {
-      x: 50,
-      y: height - 4 * fontSize,
-      size: fontSize,
-      color: rgb(0, 0, 0),
-      maxWidth: textWidth,
-      lineHeight: 16,
-    });
-
-    const pdfBytes = await pdfDoc.save();
-
-    // Set response headers to download PDF
-    res.setHeader("Content-Disposition", "attachment; filename=output.pdf");
-    res.setHeader("Content-Type", "application/pdf");
-
-    res.send(pdfBytes);
+    return NextResponse.json({ pdfBase64 }, { status: 200 });
   } catch (error) {
     console.error("Error generating PDF:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json(
+      { message: "Error generating PDF" },
+      { status: 500 },
+    );
   }
-};
+}

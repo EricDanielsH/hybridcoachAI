@@ -24,7 +24,7 @@ export default function SignInEmail({ isVerified }) {
         setError("Password must be at least 6 characters.");
         return;
       }
-      let res = await fetch("/api/findUser", {
+      let res = await fetch("/api/auth/findUser", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,6 +38,8 @@ export default function SignInEmail({ isVerified }) {
         setError(data.message || "An error occurred while finding the user.");
         return;
       }
+
+      console.log("User found successfully res", res);
 
       res = await signIn("credentials", {
         email,
