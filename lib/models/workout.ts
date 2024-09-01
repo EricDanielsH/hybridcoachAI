@@ -6,8 +6,7 @@ const workoutSchema = new Schema(
     strengthSessions: { type: Number, required: true },
     runningSessions: { type: Number, required: true },
     otherSpecifications: { type: String, required: false },
-    message: { type: String, required: true },
-    answer: { type: String, required: true },
+    pdfBase64: { type: String, required: true },
   },
   { timestamps: true },
 );

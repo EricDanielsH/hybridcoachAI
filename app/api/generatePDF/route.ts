@@ -1,7 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectMongoDB } from "@/lib/mongodb";
-import Workout from "@/lib/models/workout";
-import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { NextResponse } from "next/server";
 import MarkdownIt from "markdown-it";
 import puppeteer, { PDFOptions } from "puppeteer";
@@ -34,27 +31,6 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     // Markdown conversion to plain text (or HTML if you prefer)
     const md = new MarkdownIt();
     const parsedText = md.render(text); // Convert markdown to HTML
-
-    // First, create a new object in DB with the prompt information
-    await connectMongoDB();
-
-    const prompt = `Create a workout plan with the following specifications:
-      Workout Name: ${workoutName}
-      Number of strength sessions: ${strengthSessions}
-      Number of running sessions: ${runningSessions}
-      Other specifications: ${otherSpecifications}`;
-
-    // Creating a new workout object in DB
-    const newWorkout = await Workout.create({
-      workoutName,
-      strengthSessions,
-      runningSessions,
-      otherSpecifications,
-      message: prompt,
-      answer: `\n\n${text}`,
-    });
-
-    console.log("Create new workout successfully:", newWorkout);
 
     const workoutPlan = `
       <html>

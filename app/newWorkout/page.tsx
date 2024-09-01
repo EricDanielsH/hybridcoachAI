@@ -131,6 +131,29 @@ export default function NewWorkout() {
     URL.revokeObjectURL(url);
   };
 
+  const handleSaveWorkout = async () => {
+    if (!pdfBase64) return;
+    const res = await fetch("/api/saveWorkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        workoutName,
+        strengthSessions,
+        runningSessions,
+        otherSpecifications,
+        pdfBase64,
+      }),
+    });
+
+    if (res.ok) {
+      console.log("Workout saved to dashboard!");
+    } else {
+      console.error("Error saving workout to dashboard:", res.statusText);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center min-h-full pt-[10vh]">
       <div className="max-w-[90%] w-full p-8">
@@ -226,12 +249,20 @@ export default function NewWorkout() {
                 className="w-full h-72 sm:h-80 lg:h-96 border-0"
                 title="PDF Preview"
               />
-              <button
-                className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4"
-                onClick={handleDownloadPDF}
-              >
-                Download PDF
-              </button>
+              <div className="flex gap-2 justify-center">
+                <button
+                  className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4"
+                  onClick={handleDownloadPDF}
+                >
+                  Download PDF
+                </button>
+                <button
+                  className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4"
+                  onClick={handleSaveWorkout}
+                >
+                  Save to Dashboard
+                </button>
+              </div>
             </div>
           )}
         </div>
