@@ -1,22 +1,15 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import Workout from "@/lib/models/workout";
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
   if (req.method !== "POST") {
     return NextResponse.json({ message: "Invalid request" }, { status: 400 });
   }
 
   try {
-    // Convert the ReadableStream to JSON
-    const buffers: Buffer[] = [];
-    for await (const chunk of req.body) {
-      buffers.push(chunk);
-    }
-    const body = JSON.parse(Buffer.concat(buffers).toString());
-
+    const body = await req.json();
     const {
       workoutName,
       strengthSessions,
