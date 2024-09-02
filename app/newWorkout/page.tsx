@@ -147,10 +147,13 @@ export default function NewWorkout() {
       }),
     });
 
+    const data = await res.json();
+
     if (res.ok) {
       console.log("Workout saved to dashboard!");
     } else {
       console.error("Error saving workout to dashboard:", res.statusText);
+      setError(data.message || "Error saving workout to dashboard");
     }
   };
 
