@@ -45,7 +45,7 @@ export default function Navbar() {
       </Link>
 
       {/* Desktop Navigation */}
-      <ul className="hidden md:flex gap-4 justify-center items-center text-2xl">
+      <ul className="hidden md:flex gap-4 justify-center items-center text-xl">
         {links.map(
           (link, index) =>
             (link.public || session?.user) && (
