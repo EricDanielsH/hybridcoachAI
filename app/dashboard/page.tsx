@@ -80,24 +80,19 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col items-center min-h-full pt-[10vh]">
       <div className="max-w-2xl w-full p-8">
-        <h1 className="text-6xl font-bold text-gray-100 font-bebas">
-          <span className="text-lime-300">Dash</span>board
-        </h1>
-        <h2 className="text-xl font-semibold text-gray-100 mb-4">
-          Find your personalized workout plans{" "}
-          <span className="text-lime-300">here</span>
-        </h2>
-
-        {errorMessage && (
-          <div className="mb-4 text-red-500">{errorMessage}</div>
-        )}
-
-        <div className="flex gap-2 items-center">
-          <div className="text-lg">My Workout Plans</div>
-
-          <div className="flex items-center gap-4 p-4 my-4 bg-gray-800 rounded-lg">
+        <div className="flex gap-4 justify-between">
+          <div>
+            <h1 className="text-6xl font-bold text-gray-100 font-bebas">
+              <span className="text-lime-300">Dash</span>board
+            </h1>
+            <h2 className="text-xl font-semibold text-gray-100 mb-4">
+              Find your personalized workout plans{" "}
+              <span className="text-lime-300">here</span>
+            </h2>
+          </div>
+          <div className="flex items-center p-4 my-4 rounded-lg">
             <a
-              className="px-4 py-2 text-black font-extrabold text-2xl bg-lime-300 rounded-lg cursor-pointer"
+              className="px-2 py-2 text-black font-bold  text-2xl bg-lime-300 rounded-lg cursor-pointer"
               title="New workout"
               href="/newWorkout"
             >
@@ -107,15 +102,24 @@ export default function Dashboard() {
                 height="24px"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
+                className="jam jam-plus font-semibold"
               >
                 <path
                   d="M12 2v20m-10-10h20"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="3" // Increased thickness here
                 />
               </svg>
             </a>
           </div>
+        </div>
+
+        {errorMessage && (
+          <div className="mb-4 text-red-500">{errorMessage}</div>
+        )}
+
+        <div className="flex gap-2 items-center">
+          <div className="text-lg">My Workout Plans</div>
         </div>
 
         <section>
