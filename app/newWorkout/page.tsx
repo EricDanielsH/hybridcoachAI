@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react";
 
 export default function NewWorkout() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingSave, setLoadingSave] = useState<boolean>(false);
 
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState<string>("");
   const [pdfBase64, setPdfBase64] = useState<string>("");
@@ -132,6 +133,7 @@ export default function NewWorkout() {
   };
 
   const handleSaveWorkout = async () => {
+    setLoadingSave(true);
     if (!pdfBase64) return;
     const res = await fetch("/api/saveWorkout", {
       method: "POST",
@@ -151,10 +153,12 @@ export default function NewWorkout() {
 
     if (res.ok) {
       console.log("Workout saved to dashboard!");
+      setError("Workout saved to dashboard!");
     } else {
       console.error("Error saving workout to dashboard:", res.statusText);
       setError(data.message || "Error saving workout to dashboard");
     }
+    setLoadingSave(false);
   };
 
   return (
@@ -228,7 +232,7 @@ export default function NewWorkout() {
             )}
 
             <button
-              className={`px-4 py-4 text-gray-100 bg-gray-700 rounded-lg`}
+              className={`px-4 py-4 text-gray-100 bg-gray-700 hover:bg-lime-300 hover:text-black transition duration-300 rounded-lg`}
               type="submit"
               disabled={loading}
             >
@@ -254,16 +258,21 @@ export default function NewWorkout() {
               />
               <div className="flex gap-2 justify-center">
                 <button
-                  className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4"
+                  className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4 hover:bg-lime-300 hover:text-black transition duration-300"
                   onClick={handleDownloadPDF}
                 >
                   Download PDF
                 </button>
                 <button
-                  className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4"
+                  className="px-4 py-4 text-gray-100 bg-gray-700 rounded-lg mt-4 hover:bg-lime-300 hover:text-black transition duration-300"
+                  disabled={loadingSave}
                   onClick={handleSaveWorkout}
                 >
-                  Save to Dashboard
+                  {loadingSave ? (
+                    <span className="loading loading-spinner loading-md"></span>
+                  ) : (
+                    "Save workout"
+                  )}
                 </button>
               </div>
             </div>
