@@ -7,6 +7,7 @@ import Image from "next/image";
 
 export default function Navbar() {
   const { data: session } = useSession();
+  const userName = session?.user?.name;
   console.log("data", session);
 
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -50,25 +51,34 @@ export default function Navbar() {
           </h2>
         </Link>
         <div className="md:hidden">
-          <button
-            onClick={toggleMenu}
-            className="text-neutral-200 focus:outline-none hover:text-lime-300 transition duration-300"
-          >
-            <svg
-              className="w-8 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          {session && session?.user ? (
+            <button
+              onClick={toggleMenu}
+              className="bg-neutral-200  rounded-full w-8 h-8 focus:outline-none hover:bg-lime-300 transition duration-300 text-neutral-900 font-bold"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h16"
-              ></path>
-            </svg>
-          </button>
+              {userName && userName[0].toUpperCase() || "U"}
+            </button>
+          ) : (
+            <button
+              onClick={toggleMenu}
+              className="text-neutral-200 focus:outline-none hover:text-lime-300 transition duration-300"
+            >
+              <svg
+                className="w-8 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            </button>
+          )}
         </div>
         <ul
           ref={menuRef}
@@ -105,7 +115,7 @@ export default function Navbar() {
                 >
                   <Link href={link.href}>{link.name}</Link>
                 </li>
-              )
+              ),
           )}
           {session && session?.user ? (
             <li
@@ -115,7 +125,10 @@ export default function Navbar() {
               <a>Logout</a>
             </li>
           ) : (
-            <li className="my-2 md:my-0 hover:text-lime-300 transition duration-300 font-medium" onClick={toggleMenu}>
+            <li
+              className="my-2 md:my-0 hover:text-lime-300 transition duration-300 font-medium"
+              onClick={toggleMenu}
+            >
               <LogInButton />
             </li>
           )}
