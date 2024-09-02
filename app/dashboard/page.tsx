@@ -75,6 +75,13 @@ export default function Dashboard() {
     }
   };
 
+  const closeModal = (id: string) => {
+    const modal = document.getElementById(id) as HTMLDialogElement;
+    if (modal) {
+      modal.close();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center min-h-full pt-[10vh]">
       <div className="max-w-2xl w-full p-8">
@@ -160,10 +167,12 @@ export default function Dashboard() {
                       </h3>
                       <PDFViewer base64String={workout.pdfBase64} />
                       <div className="modal-action flex justify-center">
-                        <form method="dialog">
-                          {/* if there is a button in form, it will close the modal */}
-                          <button className="btn">Close</button>
-                        </form>
+                        <button
+                          className="btn"
+                          onClick={() => closeModal("my_modal_1")}
+                        >
+                          Close
+                        </button>
                       </div>
                     </div>
                   </dialog>
@@ -188,7 +197,9 @@ export default function Dashboard() {
                   <button
                     className="p-2 text-gray-100 bg-gray-700 rounded-lg"
                     title="Delete"
-                    onClick={() => handleDelete(workout._id)}
+                    onClick={() =>
+                      document.getElementById("my_modal_2")?.showModal()
+                    }
                   >
                     <svg
                       fill="#ffffff"
@@ -202,6 +213,58 @@ export default function Dashboard() {
                       <path d="M6 2V1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1h4a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-.133l-.68 10.2a3 3 0 0 1-2.993 2.8H5.826a3 3 0 0 1-2.993-2.796L2.137 7H2a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h4zm10 2H2v1h14V4zM4.141 7l.687 10.068a1 1 0 0 0 .998.932h6.368a1 1 0 0 0 .998-.934L13.862 7h-9.72zM7 8a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1zm4 0a1 1 0 0 1 1 1v7a1 1 0 0 1-2 0V9a1 1 0 0 1 1-1z" />
                     </svg>
                   </button>
+                  <dialog id="my_modal_2" className="modal">
+                    <div className="modal-box">
+                      <h3 className="font-bold text-lg">Confirm Delete</h3>
+                      <p className="py-4">
+                        Are you sure you want to delete this workout?
+                      </p>
+                      <div className="modal-action">
+                        <button
+                          className="btn bg-red-500 text-white"
+                          title="Delete"
+                          onClick={() => {
+                            handleDelete(workout._id);
+                            closeModal("my_modal_2");
+                          }}
+                        >
+                          Delete
+                        </button>
+
+                        <button
+                          className="btn"
+                          onClick={() => closeModal("my_modal_2")}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </dialog>
+
+                  {/* Download button */}
+                  <a
+                    href={`data:application/pdf;base64,${workout.pdfBase64}`}
+                    download={`${workout.workoutName}.pdf`}
+                    className="p-2 text-gray-100 bg-gray-700 rounded-lg"
+                    title="Download"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="feather feather-download"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="7 10 12 15 17 10"></polyline>
+                      <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                  </a>
                 </div>
               </div>
             ))
