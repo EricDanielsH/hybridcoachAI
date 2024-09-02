@@ -68,6 +68,28 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     const pdfOptions: PDFOptions = {
       format: "A4", // or use { width: '210mm', height: '297mm' } for custom dimensions
       printBackground: true,
+      displayHeaderFooter: true, // Enable header and footer
+      headerTemplate: `
+  <div style="font-size:10px; width:100%; text-align:center;">
+    <span style="font-size:12px;">
+      <span style="color:#a3e635;">Hybrid</span><span style="color:#e5e7eb;">Coach</span>
+    </span>
+  </div>
+`,
+      footerTemplate: `
+  <div style="font-size:10px; width:100%; text-align:center;">
+    <span style="font-size:12px;">
+      Made with <span style="color:#a3e635;">Hybrid</span><span style="color:#e5e7eb;">Coach</span> AI
+    </span>
+    <span style="float:right; margin-right:10px;">
+      Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+    </span>
+  </div>
+`,
+      margin: {
+        top: "50px", // Increase top margin to accommodate header
+        bottom: "50px", // Increase bottom margin to accommodate footer
+      },
     };
 
     const pdfBuffer = await page.pdf(pdfOptions);
