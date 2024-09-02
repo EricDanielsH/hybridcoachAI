@@ -163,7 +163,7 @@ export default function Dashboard() {
                       <PDFViewer base64String={workout.pdfBase64} />
                       <div className="modal-action flex justify-center">
                         <button
-                          className="btn"
+                          className="btn hover:bg-lime-300 hover:text-black transition-colors duration-300 ease-in-out"
                           onClick={() => closeModal("my_modal_1")}
                         >
                           Close
@@ -211,7 +211,7 @@ export default function Dashboard() {
                         </button>
 
                         <button
-                          className="btn"
+                          className="btn hover:bg-lime-300 hover:text-black transition-colors duration-300 ease-in-out"
                           onClick={() => closeModal("my_modal_2")}
                         >
                           Close
