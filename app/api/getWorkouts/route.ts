@@ -1,12 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import Workout from "@/lib/models/workout";
-import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest) {
   if (req.method !== "GET") {
-    return res.status(405).json({ message: "Method not allowed" });
+    return NextResponse.json({ message: "Invalid request" }, { status: 400 });
   }
 
   try {
@@ -16,7 +15,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     // Get current session (assuming this gives you the user object)
     const session = await auth();
     if (!session || !session.user || !session.user.id) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const userId = session.user.id;

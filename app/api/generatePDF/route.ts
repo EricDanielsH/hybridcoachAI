@@ -1,20 +1,14 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import MarkdownIt from "markdown-it";
 import puppeteer, { PDFOptions } from "puppeteer";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
   if (req.method !== "POST") {
     return NextResponse.json({ message: "Invalid request" }, { status: 400 });
   }
 
   try {
-    // Convert the ReadableStream to JSON
-    const buffers: Buffer[] = [];
-    for await (const chunk of req.body) {
-      buffers.push(chunk);
-    }
-    const body = JSON.parse(Buffer.concat(buffers).toString());
+    const body = await req.json();
 
     const {
       workoutName,
