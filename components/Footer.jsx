@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="bg-gray-950 text-white p-8 mt-20">
       <div className="container mx-auto text-center">
         <Link href="/" className="flex justify-center mb-4">
-          <h2 className="text-4xl font-bebas"><span className="text-lime-300">Hybrid</span>Coach</h2>
+          <h2 className="text-4xl font-bebas"><span className="text-lime-300">Hybrid</span>Coach AI</h2>
         </Link>
 
         <Link
