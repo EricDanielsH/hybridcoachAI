@@ -11,6 +11,7 @@ export default function Navbar() {
 
   // Get the user's name from the session
   const { data: session } = useSession();
+  console.log("data", session);
   const userName = session?.user?.name;
 
   // Toggle function to handle the navbar's display

@@ -21,8 +21,6 @@ export async function POST(req) {
       );
     }
 
-    console.log("Hello")
-
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -36,6 +34,8 @@ export async function POST(req) {
       name: capitalizedName,
       email,
       password: hashedPassword,
+      customerId: "",
+      priceId: "",
     });
 
     return NextResponse.json({

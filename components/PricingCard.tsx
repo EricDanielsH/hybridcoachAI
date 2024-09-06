@@ -1,4 +1,5 @@
 import React from "react";
+import { auth } from "@/auth";
 
 interface PricingCardProps {
   title: string;
@@ -11,7 +12,7 @@ interface PricingCardProps {
   link: string; // New property
 }
 
-export default function PricingCard({
+export default async function PricingCard({
   title,
   popular = false, // Default to false if not provided
   oldprice,
@@ -21,6 +22,8 @@ export default function PricingCard({
   cta,
   link,
 }: PricingCardProps) {
+  const session = await auth();
+
   return (
     <article
       className={`relative flex flex-col justify-center items-center p-8 transition-shadow duration-300 border rounded-xl shadow-sm sm:items-center hover:shadow ${
@@ -85,13 +88,18 @@ export default function PricingCard({
       </div>
       <div>
         <a
-          href={link}
+          href={
+            session
+              ? link + `?prefilled_email=` + session?.user?.email
+              : `${process.env.PUBLIC_URL}/register?warning=payfirst`
+          }
           className="inline-flex items-center justify-center w-full h-12 px-6 mt-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-lime-300 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
         >
           {cta}
         </a>
         <p className="max-w-xs mt-6 text-xs text-gray-300 sm:text-sm sm:text-center sm:max-w-sm sm:mx-auto">
-          Pay <span className="font-bold">once</span>, plan <span className="text-lime-300 font-bold">unlimited</span> times!
+          Pay <span className="font-bold">once</span>, plan{" "}
+          <span className="text-lime-300 font-bold">unlimited</span> times!
         </p>
       </div>
     </article>

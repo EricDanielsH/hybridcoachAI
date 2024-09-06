@@ -18,6 +18,7 @@
     "dompurify": "^3.1.6",
     "dotenv": "^16.4.5",
     "google-auth-library": "^9.11.0",
+    "jsonwebtoken": "^9.0.2",
     "markdown-it": "^14.1.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.4.5",
@@ -34,7 +35,8 @@
     "react-markdown": "^9.0.1",
     "react-quill": "^2.0.0",
     "resend": "^3.5.0",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "stripe": "^16.9.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

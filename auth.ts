@@ -62,11 +62,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         // User is available during sign-in
         token.id = user._id;
+        token.hasAccess = user.hasAccess;
       }
       return token;
     },
     session({ session, token }: any) {
       session.user.id = token.id;
+      session.user.hasAccess = token.hasAccess;
       return session;
     },
   },

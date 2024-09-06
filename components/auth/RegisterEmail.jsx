@@ -1,16 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
+// TODO: CHANGE FLOW TO MAKE USER PAY AFTER REGISTERING
+// Command to listen to Stripe events 
+// stripe listen --forward-to localhost:3000/api/webhook/stripe 
 
 export default function SignInEmail() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [warning, setWarning] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("warning") === "payfirst") {
+      setWarning("Before paying, you need to create an account!");
+    }
+  }, [searchParams, error]);
 
   function isValidEmail(email) {
     const emailRegex = new RegExp(
@@ -39,7 +51,7 @@ export default function SignInEmail() {
         return;
       }
 
-      const res = await fetch("/api/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,8 +66,6 @@ export default function SignInEmail() {
         return;
       }
 
-      console.log("Response:", res);
-
       const data = await res.json();
       if (data.status !== 200) {
         setError(data.message);
@@ -63,6 +73,7 @@ export default function SignInEmail() {
       }
 
       document.getElementById("form").reset();
+      console.log("Account created successfully");
       router.push("/login");
     } catch (error) {
       console.error(error);
@@ -71,6 +82,7 @@ export default function SignInEmail() {
       setIsLoading(false);
     }
     setError("");
+    setWarning("");
   };
 
   return (
@@ -138,6 +150,7 @@ export default function SignInEmail() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
+        {/* Error Message */}
         <div
           role="alert"
           className={`w-fit alert alert-error ${error === "" ? "hidden" : ""}`}
@@ -156,6 +169,27 @@ export default function SignInEmail() {
             />
           </svg>
           <span>Error! {error}</span>
+        </div>
+
+        {/* Warning Message */}
+        <div
+          role="alert"
+          className={`w-fit alert alert-warning ${warning === "" ? "hidden" : ""}`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 shrink-0 stroke-current"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <span>Warning! {warning}</span>
         </div>
 
         <button className="btn mt-8" type="submit" disabled={isLoading}>

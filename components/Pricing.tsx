@@ -1,36 +1,48 @@
 import React from "react";
 import PricingCard from "@/components/PricingCard";
 
+export const plans = [
+  {
+    title: "Basic",
+    popular: false,
+    oldprice: 25,
+    price: 19,
+    priceId:
+      process.env.NODE_ENV === "development"
+        ? "price_1PvGXPCr3YzcSMS9pX6fHCuX"
+        : "",
+    features: ["Create personalised workouts", "Download workouts in PDFs"],
+    nofeatures: ["Store workouts"],
+    cta: "Buy Basic",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_5kAbJFeMV4Te4c8bII"
+        : "",
+  },
+  {
+    title: "Pro",
+    popular: true,
+    oldprice: 39,
+    price: 29,
+    priceId:
+      process.env.NODE_ENV === "development"
+        ? "price_1PvGcRCr3YzcSMS9SGqqebHK"
+        : "",
+    features: [
+      "Create personalised workouts",
+      "Download workouts in PDFs",
+      "Workouts stored forever",
+    ],
+    cta: "Buy Pro",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_aEU9Bx7ktady9ws3cd"
+        : "",
+  },
+];
+
 export const Pricing = () => {
-  const plans = [
-    {
-      title: "Starter",
-      popular: false,
-      oldprice: 25,
-      price: 19,
-      features: [
-        "Create personalised workouts",
-        "Workouts stored up to 10 days",
-      ],
-      nofeatures: ["Download workouts in PDFs", "Edit previous workouts"],
-      cta: "Buy Starter",
-      link: "https://www.google.com",
-    },
-    {
-      title: "Pro",
-      popular: true,
-      oldprice: 39,
-      price: 29,
-      features: [
-        "Create personalised workouts",
-        "Workouts stored forever",
-        "Download workouts in PDFs",
-        "Edit previous workouts",
-      ],
-      cta: "Buy Pro",
-      link: "https://www.google.com",
-    },
-  ];
+  // Stripe plans
 
   return (
     <section
@@ -46,7 +58,7 @@ export const Pricing = () => {
         Save time with <span className="text-lime-300">personalized</span>{" "}
         hybrid workouts to reach your peak health & performance
       </h3>
-      <p className="text-gray-200 mb-6">
+      <p className="text-gray-200 mb-6 text-center">
         Special Launch Discount:{" "}
         <span className="text-lime-300 font-bold">Save 35% Today!</span>
       </p>
