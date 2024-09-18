@@ -5,7 +5,7 @@ const publicRoutes = ["/", "/login", "/register", "/plans"];
 const authRoutes = ["/login", "/register"];
 const apiAuthPrefix = "/api/auth";
 
-export default auth((req) => {
+export default auth((req: any) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const hasAccess = req.auth?.user?.hasAccess;
