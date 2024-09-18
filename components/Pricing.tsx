@@ -10,14 +10,14 @@ export const plans = [
     priceId:
       process.env.NODE_ENV === "development"
         ? "price_1PvGXPCr3YzcSMS9pX6fHCuX"
-        : "",
+        : "price_1PjNDFCr3YzcSMS90Pcs1DDM",
     features: ["Create personalised workouts", "Download workouts in PDFs"],
     nofeatures: ["Store workouts"],
     cta: "Buy Basic",
     link:
       process.env.NODE_ENV === "development"
         ? "https://buy.stripe.com/test_5kAbJFeMV4Te4c8bII"
-        : "",
+        : "https://buy.stripe.com/bIYbK4ehz8U27O8288",
   },
   {
     title: "Pro",
@@ -27,7 +27,7 @@ export const plans = [
     priceId:
       process.env.NODE_ENV === "development"
         ? "price_1PvGcRCr3YzcSMS9SGqqebHK"
-        : "",
+        : "price_1PjNEZCr3YzcSMS9XdywSuhj",
     features: [
       "Create personalised workouts",
       "Download workouts in PDFs",
@@ -37,7 +37,7 @@ export const plans = [
     link:
       process.env.NODE_ENV === "development"
         ? "https://buy.stripe.com/test_aEU9Bx7ktady9ws3cd"
-        : "",
+        : "https://buy.stripe.com/fZe01m7Tb7PY2tO001",
   },
 ];
 
