@@ -14,12 +14,13 @@ export default auth((req) => {
 
   // Skip authentication for Stripe webhook
   if (nextUrl.pathname === "/api/webhook/stripe") {
-    console.log("Skipping auth for Stripe webhook")
+    console.log("Skipping auth for Stripe webhook");
     return NextResponse.next();
   }
 
   // Allow all authentication-related API routes
   if (nextUrl.pathname.startsWith(apiAuthPrefix)) {
+    console.log("Allowing auth API routes");
     return NextResponse.next();
   }
 
