@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface PricingCardProps {
   title: string;
@@ -27,10 +28,14 @@ export default function PricingCard({
   const searchParams = useSearchParams();
   const userEmail = searchParams.get("email");
 
+  // Get session data
+  const { data: session } = useSession();
+
   return (
     <article
-      className={`relative flex flex-col justify-center items-center p-8 transition-shadow duration-300 border rounded-xl shadow-sm sm:items-center hover:shadow ${popular ? "border-lime-300 border-[3px]" : ""
-        }`}
+      className={`relative flex flex-col justify-center items-center p-8 transition-shadow duration-300 border rounded-xl shadow-sm sm:items-center hover:shadow ${
+        popular ? "border-lime-300 border-[3px]" : ""
+      }`}
     >
       {popular && (
         <div className="absolute inset-x-0  top-0 flex justify-center items-center -mt-3">
@@ -89,12 +94,21 @@ export default function PricingCard({
         </div>
       </div>
       <div>
-        <a
-          href={userEmail ? link + `?prefilled_email=` + userEmail : link}
-          className="inline-flex items-center justify-center w-full h-12 px-6 mt-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-lime-300 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
-        >
-          {cta}
-        </a>
+        {session ? (
+          <a
+            href={userEmail ? link + `?prefilled_email=` + userEmail : link}
+            className="inline-flex items-center justify-center w-full h-12 px-6 mt-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-lime-300 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
+          >
+            {cta}
+          </a>
+        ) : (
+          <a
+            href="/register"
+            className="inline-flex items-center justify-center w-full h-12 px-6 mt-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-lime-300 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
+          >
+            {cta}
+          </a>
+        )}
         <p className="max-w-xs mt-6 text-xs text-gray-300 sm:text-sm sm:text-center sm:max-w-sm sm:mx-auto">
           Pay <span className="font-bold">once</span>. Access{" "}
           <span className="text-lime-300 font-bold">forever.</span>

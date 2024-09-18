@@ -24,6 +24,8 @@ export default function SignInEmail({ isVerified }) {
         setError("Password must be at least 6 characters.");
         return;
       }
+
+      console.log("Finding user...");
       let res = await fetch("/api/auth/findUser", {
         method: "POST",
         headers: {
@@ -32,26 +34,35 @@ export default function SignInEmail({ isVerified }) {
         body: JSON.stringify({ email, password }),
       });
 
-      const { data } = await res.json();
+      console.log("res", res);
+
+      const { user } = await res.json();
+      console.log("the user", user);
       if (!res.ok) {
-        console.log("Error when finding user", data);
-        setError(data.message || "An error occurred while finding the user.");
+        console.log("Error when finding user", res);
+        setError(res.message || "An error occurred while finding the user.");
         return;
       }
 
       // If the user hasn't paid, send user to plans page to choose a plan and pay
-      if (!data.user.hasAccess) {
-        console.log("User needs to choose and pay a plan first");
-        setError("User needs to choose a plan and pay first")
-        router.push(`/plans?email=${email}`);
+      if (user) {
+        console.log("User has access:", user.hasAccess);
+        if (!user.hasAccess) {
+          console.log("User needs to choose and pay a plan first");
+          setError("User needs to choose a plan and pay first");
+          router.push(`/plans?email=${email}`);
+        }
       }
+
       console.log("User found successfully res", res);
 
+      console.log("Signing user in...");
       res = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+      console.log("res from signIn", res);
 
       if (res.error) {
         console.log("Error when logging in", res);
@@ -59,7 +70,8 @@ export default function SignInEmail({ isVerified }) {
       } else {
         setError("");
         document.getElementById("form").reset();
-        router.push("/");
+        console.log("User signed in successfully. Redirecting to dashboard");
+        router.push("/dashboard");
       }
     } catch (e) {
       console.error("Error when finding user", e);

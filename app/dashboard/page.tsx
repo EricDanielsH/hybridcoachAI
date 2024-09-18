@@ -36,7 +36,9 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchWorkouts() {
       try {
-        const res = await fetch("/api/getWorkouts");
+        const res = await fetch("/api/getWorkouts", {
+          method: "GET",
+        });
         if (res.ok) {
           const data: Workout[] = await res.json();
           setWorkouts(data);

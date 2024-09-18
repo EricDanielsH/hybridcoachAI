@@ -1,3 +1,4 @@
+"use server";
 import { NextRequest, NextResponse } from "next/server";
 import { connectMongoDB } from "@/lib/mongodb";
 import Workout from "@/lib/models/workout";

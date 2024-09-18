@@ -51,6 +51,7 @@ export default function SignInEmail() {
         return;
       }
 
+      // Using fetch to send a POST request to the API
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -60,29 +61,30 @@ export default function SignInEmail() {
       });
 
       if (!res.ok) {
-        const errorData = await res.text(); // Retrieve the full response body as text
-        console.error("Error Response Body:", errorData);
-        setError("An error occurred while creating the account.");
+        console.log("res", res);
+        const { message } = await res.json();
+        console.log("message", message);
+        setError("An error occurred while creating the account: " + message);
         return;
       }
 
+      console.log("Account created successfully");
       const data = await res.json();
-      if (data.status !== 200) {
-        setError(data.message);
-        return;
-      }
+      console.log("teh data", data);
 
-      const { user } = await res.json();
-      const userEmail = user.email;
+      const userEmail = data.email;
+      console.log("user", email);
 
       document.getElementById("form").reset();
-      console.log("Account created successfully");
+
       // After creating account, send user to payment page
       // Send with the email so we can prepopulate
+      console.log("Redirecting to plans with email:", userEmail);
       router.push(`/plans?email=${userEmail}`);
     } catch (error) {
+      console.error("Caught error:");
       console.error(error);
-      setError("An error occurred while creating the account");
+      setError("An error occurred while creating the account: " + error);
     } finally {
       setIsLoading(false);
     }
