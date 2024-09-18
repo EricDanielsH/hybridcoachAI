@@ -96,14 +96,14 @@ export default function PricingCard({
       <div>
         {session ? (
           <a
-            href={userEmail ? link + `?prefilled_email=` + userEmail : link}
+            href="/dashboard"
             className="inline-flex items-center justify-center w-full h-12 px-6 mt-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-lime-300 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
           >
             {cta}
           </a>
         ) : (
           <a
-            href="/register"
+            href={userEmail ? link + `?prefilled_email=` + userEmail : link}
             className="inline-flex items-center justify-center w-full h-12 px-6 mt-6 font-medium tracking-wide text-black transition duration-200 rounded shadow-md bg-lime-300 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
           >
             {cta}
