@@ -1,7 +1,5 @@
 import NextAuth from "next-auth";
-import { NextResponse } from "next/server";
 import Credentials from "next-auth/providers/credentials";
-import { connectMongoDB } from "@/lib/mongodb";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -17,7 +15,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         try {
-          await connectMongoDB();
           const res = await fetch(
             `${process.env.PUBLIC_URL}/api/auth/findUserByEmail`,
             {
