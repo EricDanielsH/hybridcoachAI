@@ -133,7 +133,12 @@ export default function Dashboard() {
                   href="#"
                   className="text-lg font-semibold text-gray-100"
                   onClick={() => {
-                    return document?.getElementById("my_modal_1")?.showModal();
+                    const modal = document.getElementById(
+                      "my_modal_1",
+                    ) as HTMLDialogElement;
+                    if (modal) {
+                      modal.showModal();
+                    }
                   }}
                 >
                   {workout.workoutName}
@@ -143,9 +148,12 @@ export default function Dashboard() {
                   <button
                     className=" p-2 text-gray-100 bg-gray-700 rounded-lg"
                     onClick={() => {
-                      return document
-                        ?.getElementById("my_modal_1")
-                        ?.showModal();
+                      const modal = document.getElementById(
+                        "my_modal_1",
+                      ) as HTMLDialogElement;
+                      if (modal) {
+                        modal.showModal();
+                      }
                     }}
                   >
                     <svg
@@ -180,9 +188,14 @@ export default function Dashboard() {
                   <button
                     className="p-2 text-gray-100 bg-gray-700 rounded-lg"
                     title="Delete"
-                    onClick={() =>
-                      document.getElementById("my_modal_2")?.showModal()
-                    }
+                    onClick={() => {
+                      const modal = document.getElementById(
+                        "my_modal_2",
+                      ) as HTMLDialogElement;
+                      if (modal) {
+                        modal.showModal();
+                      }
+                    }}
                   >
                     <svg
                       fill="#ffffff"
