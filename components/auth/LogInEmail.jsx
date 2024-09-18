@@ -32,13 +32,19 @@ export default function SignInEmail({ isVerified }) {
         body: JSON.stringify({ email, password }),
       });
 
+      const { data } = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         console.log("Error when finding user", data);
         setError(data.message || "An error occurred while finding the user.");
         return;
       }
 
+      // If the user hasn't paid, send user to plans page to choose a plan and pay
+      if (!data.user.hasAccess) {
+        console.log("User needs to choose and pay a plan first");
+        setError("User needs to choose a plan and pay first")
+        router.push(`/plans?email=${email}`);
+      }
       console.log("User found successfully res", res);
 
       res = await signIn("credentials", {

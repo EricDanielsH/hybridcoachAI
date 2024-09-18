@@ -30,7 +30,7 @@ export async function POST(req) {
 
 
     // Create the user
-    await User.create({
+    const user = await User.create({
       name: capitalizedName,
       email,
       password: hashedPassword,
@@ -38,13 +38,13 @@ export async function POST(req) {
       priceId: "",
     });
 
-    return NextResponse.json({
+    return NextResponse.json(user, {
       message: "User registered successfully",
       status: 200,
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.error(
+    return NextResponse.json(
       { message: "An error occurred while creating the user" },
       { status: 500 },
     );

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
 // TODO: CHANGE FLOW TO MAKE USER PAY AFTER REGISTERING
-// Command to listen to Stripe events 
-// stripe listen --forward-to localhost:3000/api/webhook/stripe 
+// Command to listen to Stripe events
+// stripe listen --forward-to localhost:3000/api/webhook/stripe
 
 export default function SignInEmail() {
   const router = useRouter();
@@ -72,9 +72,14 @@ export default function SignInEmail() {
         return;
       }
 
+      const { user } = await res.json();
+      const userEmail = user.email;
+
       document.getElementById("form").reset();
       console.log("Account created successfully");
-      router.push("/login");
+      // After creating account, send user to payment page
+      // Send with the email so we can prepopulate
+      router.push(`/plans?email=${userEmail}`);
     } catch (error) {
       console.error(error);
       setError("An error occurred while creating the account");
