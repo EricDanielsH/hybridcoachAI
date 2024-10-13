@@ -15,21 +15,11 @@ export default function Demo() {
         Check how it works!
       </h3>
 
-      {/* Embed YouTube Video */}
-      <div className="relative overflow-hidden rounded-xl">
-        <div className="aspect-w-16 aspect-h-9">
-          <iframe
-            src="https://www.youtube.com/embed/7chmbcMe0H4?si=h77Q_qLvS-FkbwSz"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-            className=" w-[300px] h-[170px] sm:w-[450px] sm:h-[253px] md:w-[600px] md:h-[338px] lg:w-[800px] lg:h-[450px] xl:w-[1000px] xl:h-[563px]"
-          ></iframe>
-        </div>
+      <div className="relative overflow-hidden rounded-xl bg-gray-800 w-[300px] h-[170px] sm:w-[450px] sm:h-[253px] md:w-[600px] md:h-[338px] lg:w-[800px] lg:h-[450px] xl:w-[1000px] xl:h-[563px] flex items-center justify-center">
+        <p className="text-gray-200 text-xl font-semibold text-center">
+          Demo coming out soon...
+        </p>
       </div>
     </section>
   );
 }
-
